@@ -10,3 +10,9 @@
     position: fixed;
     z-index: 1;
   }
+  
+  .example-card {
+    margin: 8px;
+    width: calc(100% - 16px);
+  }
+  

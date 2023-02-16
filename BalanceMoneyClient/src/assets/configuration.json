@@ -1,0 +1,4 @@
+{
+    "apiURL": "https://newsapi.org/v2/top-headlines?country=il",
+    "apiKey": "05e847a78c6046229c1438405bc3abe7"
+}
