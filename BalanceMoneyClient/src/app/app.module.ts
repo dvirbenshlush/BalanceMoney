@@ -10,14 +10,18 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DashboardComponent } from '../../src/app/features/dashboard/dashboard.component';
-
-
+import { ChartsComponent } from '../../src/app/features/charts/charts.component';
+import * as Highcharts from 'highcharts';
+import xrange from 'highcharts/modules/xrange';
+xrange(Highcharts);
+// Exporting(Highcharts);
 
 @NgModule({
   declarations: [
     AppComponent,
     NewsComponent,
-    DashboardComponent
+    DashboardComponent,
+    ChartsComponent
   ],
   imports: [
     BrowserModule,
@@ -33,3 +37,7 @@ import { DashboardComponent } from '../../src/app/features/dashboard/dashboard.c
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+// function Exporting(Highcharts: typeof Highcharts) {
+  // throw new Error('Function not implemented.');
+// }
+

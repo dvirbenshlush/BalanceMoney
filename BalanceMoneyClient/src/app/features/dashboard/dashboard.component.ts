@@ -1,59 +1,48 @@
-
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { Chart } from 'chart.js';
 import { NewsApiService } from 'src/app/services/news-api.service';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit } from '@angular/core';
+import * as Highcharts from 'highcharts';
+
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  pricesStoce: number[] = [];
+  symbol = 'AAPL';
+  price: string = '';
+  dataLoaded = false;
 
-  chart: Chart;
 
-  constructor() {
-    this.chart = new Chart('canvas', {
-      type: 'bar',
-      data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-          label: '# of Votes',
-          data: [12, 19, 3, 5, 2, 3],
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          // yAxes: [{
-          //   ticks: {
-          //     beginAtZero: true
-          //   }
-          // }]
+  constructor(private newsService: NewsApiService) {
+    this.newsService.getPrice(this.symbol).subscribe(data => {
+      const monthlyData: number[] = [];
+      const currentYear = new Date().getFullYear().toString();
+      const timeSeries = data['Monthly Adjusted Time Series'];
+      const currenMonth = new Date().getMonth().toString()
+      for (const date in timeSeries) {
+        const year = date.split('-')[0].valueOf()
+        const month = date.split('-')[1].valueOf().charAt(1)
+        if ((parseInt(year) == parseInt(currentYear)) || (parseInt(year) + 1 == parseInt(currentYear) && parseInt(currenMonth) <= parseInt(month))) {
+          const price = parseFloat(timeSeries[date]['4. close']);
+          monthlyData.push(price);
         }
       }
-    });
-  }
+      this.pricesStoce = monthlyData
+      console.log('Monthly price data for current year:', monthlyData);
+      this.dataLoaded = true; // Set the flag to indicate that the data has been loaded
 
-  ngOnInit(): void {
-  }
+    }
+    )
+   }
 
-}
+  ngOnInit (){
+        // this.newsService.getActivePrice(this.symbol).subscribe(response => console.log(response['Global Quote']['05. price']))
+
+  }
   
+}
+

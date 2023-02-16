@@ -1,1 +1,3 @@
-<div>hello</div>
+<div id="container" *ngIf="dataLoaded"> 
+  <app-charts *ngIf="pricesStoce != null" [pricesStoce]="pricesStoce"></app-charts>
+</div>

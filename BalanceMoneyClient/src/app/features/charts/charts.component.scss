@@ -1,0 +1,21 @@
+.example-dashboard-container {
+    width: calc(100% - 320px);
+    height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .example-dashboard-card {
+    width: 80%;
+    height: 80%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

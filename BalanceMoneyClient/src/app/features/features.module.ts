@@ -5,11 +5,13 @@ import { MatCardModule } from '@angular/material/card/card-module';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashBoardComponent } from './dashboard/dashboard.component';
+import { ChartsComponent } from './charts/charts.component';
 
 @NgModule({
   declarations: [
   
-    DashBoardComponent
+    DashBoardComponent,
+        ChartsComponent
   ],
   imports: [
     BrowserModule,

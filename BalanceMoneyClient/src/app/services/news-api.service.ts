@@ -35,13 +35,8 @@ export class NewsApiService {
     return this.http.get(url);
   }
 
-  getPrice(symbol:string): Observable<any> {
+  getActivePrice(symbol:string): Observable<any> {
     let params = new HttpParams({fromObject: 
-      // {
-      //   category: 'business', 
-      //   country: 'il',
-      //   apiKey: this.apiKey
-      // }
       {
         function:'TIME_SERIES_INTRADAY',
         symbol:'IBM',
@@ -49,12 +44,20 @@ export class NewsApiService {
         apikey: this.apiKey
       }
     })
-    // params.append('category', 'business');
-    // params.append('country', 'il');
-    // params.append('apiKey', this.apiKey);
-    
-    // return this.httpClient.get<any>(this.apiURL,{params:params}) 
     const url = `${this.apiUrl}?function=GLOBAL_QUOTE&symbol=${symbol}&apikey=${this.apiKey}`;
+    return this.http.get(url);
+   }
+
+   getPrice(symbol:string): Observable<any> {
+    let params = new HttpParams({fromObject: 
+      {
+        function:'TIME_SERIES_INTRADAY',
+        symbol:'IBM',
+        interval:'5min',
+        apikey: this.apiKey
+      }
+    })
+    const url = `${this.apiUrl}?function=TIME_SERIES_MONTHLY_ADJUSTED&symbol=${symbol}&apikey=${this.apiKey}`;
     return this.http.get(url);
    }
 }
