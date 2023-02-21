@@ -1,3 +1,14 @@
-<div id="container" *ngIf="dataLoaded"> 
-  <app-charts *ngIf="pricesStoce != null" [pricesStoce]="pricesStoce"></app-charts>
+<div id="container">
+  <mat-tab-group mat-stretch-tabs="false" *ngIf="dataLoaded" mat-align-tabs="start">
+    <mat-tab label="First" >
+        <app-charts  *ngIf="pricesStoce != null" [id]="'chart-container-1'" [pricesStoce]="pricesStoce"></app-charts>
+    </mat-tab>
+    <mat-tab label="Second" >
+        <app-charts [id]="'chart-container-1'" *ngIf="pricesStoce != null" [pricesStoce]="pricesStoce"></app-charts> 
+    </mat-tab>
+    <!-- <mat-tab label="Third" >
+        <app-charts id="chart-container-3" *ngIf="pricesStoce != null" [pricesStoce]="pricesStoce"></app-charts>
+    </mat-tab>  -->
+  </mat-tab-group>
+  <!-- <app-charts *ngIf="pricesStoce != null" [pricesStoce]="pricesStoce"></app-charts> -->
 </div>

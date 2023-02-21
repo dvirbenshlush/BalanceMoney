@@ -11,6 +11,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { DashboardComponent } from '../../src/app/features/dashboard/dashboard.component';
 import { ChartsComponent } from '../../src/app/features/charts/charts.component';
+import { MatTabsModule } from '@angular/material/tabs';
 import * as Highcharts from 'highcharts';
 import xrange from 'highcharts/modules/xrange';
 xrange(Highcharts);
@@ -32,6 +33,7 @@ xrange(Highcharts);
     MatDividerModule,
     MatExpansionModule,
     MatSidenavModule,
+    MatTabsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

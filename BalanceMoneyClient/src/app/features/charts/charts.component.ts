@@ -13,6 +13,7 @@ import * as Highcharts from 'highcharts';
 export class ChartsComponent implements AfterViewInit, OnInit, OnChanges {
 
   @Input() pricesStoce! : number[] 
+  @Input() id! : string 
 
   dataPoint: Highcharts.XrangePointOptionsObject = {
     x: Date.UTC(2023, 1, 1),
@@ -30,7 +31,8 @@ export class ChartsComponent implements AfterViewInit, OnInit, OnChanges {
   
   chartConfig: Highcharts.Options = {
     chart: {
-      type: 'spline'
+      type: 'spline',
+      renderTo: 'chart-container-1' // use the id of the container element
     },
     accessibility: {
       point: {
@@ -85,7 +87,7 @@ export class ChartsComponent implements AfterViewInit, OnInit, OnChanges {
   
 
 
-  constructor() {
+  constructor(private elementRef: ElementRef) {
 
   }
 
@@ -100,12 +102,20 @@ export class ChartsComponent implements AfterViewInit, OnInit, OnChanges {
   }
 
   ngAfterViewInit(): void {
-    Highcharts.chart('chart-container', this.chartConfig);
+    // this.pricesStoce = this.pricesStoce.map(i => i + 2000)
+    let item: Highcharts.SeriesOptionsType = {
+      type: 'line',
+      name: 'My Series',
+      data: this.pricesStoce,
+    };
+    this.chartConfig.series = [item]
+
+    Highcharts.chart(this.elementRef.nativeElement.querySelector(`#${this.id}`), this.chartConfig);
     console.log('pricesStoce after ', this.pricesStoce)
   }
 
   ngOnChanges(){
-    Highcharts.chart('chart-container', this.chartConfig);
+    Highcharts.chart('chart-container-1', this.chartConfig);
   }
 
 }
