@@ -16,6 +16,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatIconModule} from '@angular/material/icon';
 
 import * as Highcharts from 'highcharts';
 import xrange from 'highcharts/modules/xrange';
@@ -43,6 +44,7 @@ xrange(Highcharts);
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatIconModule,
     MatCheckboxModule
   ],
   providers: [],

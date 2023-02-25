@@ -1,8 +1,9 @@
 import { MatCardModule } from '@angular/material/card';
-import { Chart } from 'chart.js';
+import { Chart, UpdateModeEnum } from 'chart.js';
 import { NewsApiService } from 'src/app/services/news-api.service';
 import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
+import { forkJoin } from 'rxjs';
 
 
 @Component({
@@ -22,26 +23,45 @@ export class ChartsComponent implements AfterViewInit, OnInit {
     { name: 'Tesla', symbol: 'TSLA' }
   ];  // ... rest of the component code
 
+  addStock(){
+    this.selectedStock = 'MSFT'
+    this.updateChartData()
+  }
+
   updateChartData() {
-    
-    this.newsApiService.getPrice(this.selectedStock).subscribe(data => {
-      const monthlyData: number[] = [];
-      const currentYear = new Date().getFullYear().toString();
-      const timeSeries = data['Monthly Adjusted Time Series'];
-      const currenMonth = new Date().getMonth().toString()
-      for (const date in timeSeries) {
-        const year = date.split('-')[0].valueOf()
-        const month = date.split('-')[1].valueOf().charAt(1)
-        if ((parseInt(year) == parseInt(currentYear)) || (parseInt(year) + 1 == parseInt(currentYear) && parseInt(currenMonth) <= parseInt(month))) {
-          const price = parseFloat(timeSeries[date]['4. close']);
-          monthlyData.push(price);
+    const selectedStocks = this.selectedStock.split(',');
+    const requestData: any = [];
+
+    selectedStocks.forEach(stock => {
+      requestData.push(this.newsApiService.getPrice(stock));
+    });
+
+    forkJoin(requestData).subscribe(data => {
+      console.log('selectedStockdata ', data)
+      data.forEach((response: any, i) => {
+        const monthlyData: number[] = [];
+        const currentYear = new Date().getFullYear().toString();
+        const timeSeries = response['Monthly Adjusted Time Series'];
+        const currenMonth = new Date().getMonth().toString()
+        for (const date in timeSeries) {
+          const year = date.split('-')[0].valueOf()
+          const month = date.split('-')[1].valueOf().charAt(1)
+          if ((parseInt(year) == parseInt(currentYear)) || (parseInt(year) + 1 == parseInt(currentYear) && parseInt(currenMonth) <= parseInt(month))) {
+            const price = parseFloat(timeSeries[date]['4. close']);
+            monthlyData.push(price);
+          }
         }
-      }
-      this.pricesStoce = monthlyData
-      this.chart.series[0].setData(this.pricesStoce);
-      console.log('data from submit ', this.pricesStoce)
+        const seriesData = monthlyData.map((price, j) => [j, price]);
+        const newSeries: Highcharts.SeriesOptionsType = {
+          type: 'line',
+          name: this.stocks.find(stock => stock.symbol === selectedStocks[i])?.name || this.selectedStock,
+          data: seriesData
+        };
+        this.chart.addSeries(newSeries);
+      });
     });
   }
+
   
   onChange(event:any) {
     console.log(event)
