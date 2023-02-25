@@ -43,6 +43,8 @@ export class DashboardComponent implements OnInit {
         // this.newsService.getActivePrice(this.symbol).subscribe(response => console.log(response['Global Quote']['05. price']))
 
   }
+
+  
   
 }
 

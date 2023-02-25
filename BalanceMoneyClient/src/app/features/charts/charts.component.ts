@@ -10,10 +10,47 @@ import * as Highcharts from 'highcharts';
   templateUrl: './charts.component.html',
   styleUrls: ['./charts.component.scss']
 })
-export class ChartsComponent implements AfterViewInit, OnInit, OnChanges {
+export class ChartsComponent implements AfterViewInit, OnInit {
 
   @Input() pricesStoce! : number[] 
-  @Input() id! : string 
+  selected = -1;
+
+  selectedStock!: string; // default selected option
+  chart: any; // reference to the chart object
+  stocks: { name: string, symbol: string }[] = [
+    { name: 'Apple', symbol: 'AAPL' },
+    { name: 'Tesla', symbol: 'TSLA' }
+  ];  // ... rest of the component code
+
+  updateChartData() {
+    
+    this.newsApiService.getPrice(this.selectedStock).subscribe(data => {
+      const monthlyData: number[] = [];
+      const currentYear = new Date().getFullYear().toString();
+      const timeSeries = data['Monthly Adjusted Time Series'];
+      const currenMonth = new Date().getMonth().toString()
+      for (const date in timeSeries) {
+        const year = date.split('-')[0].valueOf()
+        const month = date.split('-')[1].valueOf().charAt(1)
+        if ((parseInt(year) == parseInt(currentYear)) || (parseInt(year) + 1 == parseInt(currentYear) && parseInt(currenMonth) <= parseInt(month))) {
+          const price = parseFloat(timeSeries[date]['4. close']);
+          monthlyData.push(price);
+        }
+      }
+      this.pricesStoce = monthlyData
+      this.chart.series[0].setData(this.pricesStoce);
+      console.log('data from submit ', this.pricesStoce)
+    });
+  }
+  
+  onChange(event:any) {
+    console.log(event)
+  }  
+
+  ngAfterViewInit(): void {
+    this.chart = Highcharts.chart('chart-container', this.chartConfig);
+    console.log('change now')
+  }
 
   dataPoint: Highcharts.XrangePointOptionsObject = {
     x: Date.UTC(2023, 1, 1),
@@ -31,8 +68,7 @@ export class ChartsComponent implements AfterViewInit, OnInit, OnChanges {
   
   chartConfig: Highcharts.Options = {
     chart: {
-      type: 'spline',
-      renderTo: 'chart-container-1' // use the id of the container element
+      type: 'spline'
     },
     accessibility: {
       point: {
@@ -87,35 +123,24 @@ export class ChartsComponent implements AfterViewInit, OnInit, OnChanges {
   
 
 
-  constructor(private elementRef: ElementRef) {
+  constructor(private newsApiService: NewsApiService) {
 
   }
 
+
   ngOnInit(): void {
       console.log('pricesStoce ', this.pricesStoce)
+      console.log('selectedStock ', this.selectedStock)
       this.item = {
         type: 'line',
         name: 'My Series',
         data: this.pricesStoce,
-      };
+      };;  
       this.chartConfig.series = [ this.item ];
+
   }
 
-  ngAfterViewInit(): void {
-    // this.pricesStoce = this.pricesStoce.map(i => i + 2000)
-    let item: Highcharts.SeriesOptionsType = {
-      type: 'line',
-      name: 'My Series',
-      data: this.pricesStoce,
-    };
-    this.chartConfig.series = [item]
 
-    Highcharts.chart(this.elementRef.nativeElement.querySelector(`#${this.id}`), this.chartConfig);
-    console.log('pricesStoce after ', this.pricesStoce)
-  }
 
-  ngOnChanges(){
-    Highcharts.chart('chart-container-1', this.chartConfig);
-  }
 
 }

@@ -1,6 +1,23 @@
-<mat-card>
-    <div id="chart-container-1"></div>
-    <!-- <div id="chart-container-2"></div> -->
-    <!-- <div id="chart-container-3"></div> -->
-  </mat-card>
-  
+    <mat-form-field>
+        <mat-label>Select stocks:</mat-label>
+        <mat-select [(ngModel)]="selectedStock" (ngModelChange)="updateChartData()" >
+        <mat-option *ngFor="let stock of stocks; let i =index" [value]="stock.symbol">
+            <!-- {{stock.name}} -->
+            <mat-checkbox [checked]="selected === i" (change)="onChange(stock);selected = i"> {{stock.name}}</mat-checkbox>
+        </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <!-- <mat-form-field> -->
+        <!-- <section class="example-section" [formGroup]="toppings">
+            <h4>Select your toppings:</h4>
+            <p><mat-checkbox formControlName="pepperoni">Pepperoni</mat-checkbox></p>
+            <p><mat-checkbox formControlName="extracheese">Extra Cheese</mat-checkbox></p>
+            <p><mat-checkbox formControlName="mushroom">Mushroom</mat-checkbox></p>
+          </section> -->
+    <!-- </mat-form-field> -->
+    
+    <mat-card>
+        <div id="chart-container"></div>
+    </mat-card>
+    
